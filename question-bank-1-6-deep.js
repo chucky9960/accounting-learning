@@ -1,0 +1,26 @@
+/* 第1-6章深度母題層：增加綜合、陷阱、反向與多步驟題，不以單純換數字灌母題。 */
+(()=>{if(!window.QBANK)throw new Error('QBANK must load first');
+const add=(c,t,type,lvl,ess,m,q,a,x,e)=>window.QBANK.push({id:`D${c+1}-${m}-${String(window.QBANK.length+1).padStart(6,'0')}`,c,topic:t,type,level:lvl,essence:ess,motherId:`C${c+1}-DEEP-${m}`,q,a,x,e});
+const M=n=>Math.round(n).toLocaleString('zh-TW');
+// CH1 深度：交易連鎖、等式反推、觀念陷阱
+for(let i=0;i<120;i++){let capital=100000+(i%31)*5000,loan=30000+(i%17)*3000,equip=20000+(i%13)*2000,rent=3000+(i%9)*500,asset=capital+loan-rent,equity=capital-rent;add(0,'交易連鎖','綜合題',3,i<30,'CHAIN',`企業成立時業主投入${M(capital)}元，另借款${M(loan)}元，現購設備${M(equip)}元，並支付本月租金${M(rent)}元。上述交易後資產總額與權益分別為？`,[`${M(asset)}；${M(equity)}`,`${M(asset-equip)}；${M(capital)}`,`${M(capital+loan)}；${M(capital)}`,`${M(asset)}；${M(capital+loan-rent)}`],0,`設備購入只是資產內部轉換；租金使資產及權益各減${M(rent)}。資產＝${M(asset)}，權益＝${M(equity)}。`)}
+const traps1=[['業主替企業投入一台設備','資產增加、權益增加','投入不是收入。'],['企業收到客戶預付但尚未履約','資產增加、負債增加','未履約前不是收入。'],['收回先前賒銷形成的應收帳款','資產總額不變','收入已於賒銷時認列。'],['業主從企業提款供私人使用','資產減少、權益減少','提款不是企業費用。'],['以現金清償借款本金','資產減少、負債減少','本金清償不是費用。']];
+traps1.forEach((r,j)=>{for(let i=0;i<24;i++)add(0,'易錯觀念','陷阱題',2,i<8,`TRAP${j}`,`下列交易：「${r[0]}」。何者最正確？`,[r[1],'收入增加','費用增加','權益一定增加'],0,r[2])});
+// CH2 深度：複合分錄、試算陷阱
+for(let i=0;i<140;i++){let total=12000+(i%37)*1000,cash=Math.round(total*(.3+(i%5)*.1)),credit=total-cash;add(1,'複合分錄','綜合分錄',3,i<35,'COMPOUND',`購入用品${M(total)}元，支付現金${M(cash)}元，其餘賒欠。正確分錄為？`,[`借用品${M(total)}；貸現金${M(cash)}、應付帳款${M(credit)}`,`借現金${M(cash)}、應付帳款${M(credit)}；貸用品${M(total)}`,`借用品${M(cash)}；貸應付帳款${M(total)}`,`借費用${M(total)}；貸現金${M(total)}`],0,`用品增加借${M(total)}；現金減少貸${M(cash)}；未付款形成應付帳款貸${M(credit)}。`)}
+const trialTraps=[['整筆交易漏記','試算仍可能平衡'],['借貸雙方同額記錯科目','試算仍可能平衡'],['一筆借方重複過帳','試算通常不平衡'],['貸方金額少記一位數','試算通常不平衡'],['借貸方向完全顛倒但金額相等','試算仍可能平衡']];
+trialTraps.forEach((r,j)=>{for(let i=0;i<28;i++)add(1,'試算','陷阱題',2,i<7,`TTRAP${j}`,`發生「${r[0]}」時，下列判斷何者較正確？`,[r[1],r[1].includes('仍')?'試算一定不平衡':'試算一定仍平衡','一定不影響任何報表','一定代表現金錯誤'],0,`${r[0]}：${r[1]}。試算平衡只能證明借貸合計相等，不能證明完全無誤。`)});
+// CH3 深度：跨期調整、調整後餘額
+for(let i=0;i<160;i++){let pre=24000+(i%31)*1200,months=12,used=1+i%11,exp=pre/months*used,asset=pre-exp;add(2,'遞延費用','多步驟',3,i<40,'PREBAL',`年初預付一年保險${M(pre)}元，期末已經過${used}個月。調整後保險費與預付保險費餘額分別為？`,[`${M(exp)}；${M(asset)}`,`${M(asset)}；${M(exp)}`,`${M(pre)}；0`,`0；${M(pre)}`],0,`已到期部分為費用${M(exp)}，未到期資產為${M(asset)}。`)}
+for(let i=0;i<120;i++){let salary=15000+(i%41)*500,paid=5000+(i%9)*500,accr=salary-paid;add(2,'應計費用','綜合題',3,i<30,'ACCRUAL',`本期員工已提供勞務共${M(salary)}元，其中${M(paid)}元已支付，其餘期末尚未支付。期末尚需認列的應付薪資為？`,[M(accr),M(salary),M(paid),M(salary+paid)],0,`尚未支付但已屬本期的薪資＝${M(salary)}－${M(paid)}＝${M(accr)}元。`)}
+// CH4 深度：淨進貨、淨銷貨、毛利率
+for(let i=0;i<160;i++){let pur=80000+(i%43)*2000,ret=3000+(i%11)*500,disc=1000+(i%7)*300,freight=1500+(i%9)*200,net=pur-ret-disc+freight;add(3,'進貨淨額','綜合計算',3,i<40,'NETPUR',`進貨${M(pur)}元、進貨退出${M(ret)}元、進貨折扣${M(disc)}元、進貨運費${M(freight)}元，進貨淨額為？`,[M(net),M(pur-ret-disc),M(pur+ret+disc+freight),M(pur)],0,`進貨淨額＝進貨－退出－折扣＋進貨運費＝${M(net)}元。`)}
+for(let i=0;i<120;i++){let sales=120000+(i%51)*3000,ret=5000+(i%13)*500,disc=2000+(i%9)*300,cost=60000+(i%37)*2000,net=sales-ret-disc,gp=net-cost;add(3,'銷貨毛利','多步驟',3,i<30,'NETGP',`銷貨收入${M(sales)}元、銷貨退回${M(ret)}元、銷貨折扣${M(disc)}元、銷貨成本${M(cost)}元，毛利為？`,[M(gp),M(sales-cost),M(net),M(cost)],0,`銷貨淨額＝${M(net)}；毛利＝銷貨淨額－銷貨成本＝${M(gp)}元。`)}
+// CH5 深度：銀行與帳面兩側完整調節
+for(let i=0;i<180;i++){let bank=100000+(i%61)*2000,transit=5000+(i%17)*500,out=7000+(i%19)*500,bankAdj=bank+transit-out;add(4,'銀行調節','銀行端多步驟',3,i<45,'BANKSIDE',`銀行對帳單餘額${M(bank)}元，在途存款${M(transit)}元、未兌現支票${M(out)}元。忽略其他項目，調整後銀行餘額為？`,[M(bankAdj),M(bank-transit+out),M(bank+transit+out),M(bank)],0,`銀行端：餘額＋在途存款－未兌現支票＝${M(bankAdj)}元。`)}
+for(let i=0;i<140;i++){let book=90000+(i%53)*1800,collect=4000+(i%17)*400,fee=100+(i%9)*50,nsf=1000+(i%13)*200,adj=book+collect-fee-nsf;add(4,'銀行調節','帳面端多步驟',3,i<35,'BOOKSIDE',`公司帳面餘額${M(book)}元，銀行代收${M(collect)}元、手續費${M(fee)}元、退票${M(nsf)}元均未入帳。調整後帳面餘額？`,[M(adj),M(book),M(book-collect+fee+nsf),M(book+collect+fee+nsf)],0,`帳面端＝${M(book)}＋${M(collect)}－${M(fee)}－${M(nsf)}＝${M(adj)}元。`)}
+// CH6 深度：備抵調整、票據多步驟
+for(let i=0;i<180;i++){let ar=200000+(i%61)*5000,rate=[1,2,3,4,5][i%5],required=Math.round(ar*rate/100),before=(i%2?1:-1)*(500+(i%17)*100),adj=required-before;add(5,'備抵損失','期末調整',3,i<45,'ALLOWADJ',`期末應收帳款${M(ar)}元，估計損失率${rate}%，調整前備抵損失餘額為${before>=0?'貸':'借'}方${M(Math.abs(before))}元。若期末備抵應達估計數，應調整信用損失多少？`,[M(adj),M(required),M(Math.abs(before)),M(required+before)],0,`期末所需備抵＝${M(required)}；調整額＝所需貸餘－調整前餘額（借餘視為負數）＝${M(adj)}元。`)}
+for(let i=0;i<140;i++){let p=50000+(i%67)*5000,r=[3,4,5,6,8][i%5],days=[30,60,90,120,180][i%5],interest=Math.round(p*r/100*days/360),mat=p+interest;add(5,'應收票據','日數票據綜合',3,i<35,'NOTEDAY',`面額${M(p)}元、年利率${r}%、${days}天票據，以一年360天計，利息與到期值約為？`,[`${M(interest)}；${M(mat)}`,`${M(mat)}；${M(interest)}`,`${M(p*r/100)}；${M(p)}`,`0；${M(p)}`],0,`利息＝${M(p)}×${r}%×${days}/360＝${M(interest)}；到期值＝${M(mat)}元。`)}
+window.QBANK_DEEP_STATS={added:'deep-mother-variants',counts:Array.from({length:6},(_,c)=>window.QBANK.filter(q=>q.c===c).length),motherCounts:Array.from({length:6},(_,c)=>new Set(window.QBANK.filter(q=>q.c===c).map(q=>q.motherId||q.id)).size)};
+})();
